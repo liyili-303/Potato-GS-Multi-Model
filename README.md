@@ -18,8 +18,8 @@ accuracy can be reported as a mean over seeds.
 ├── KRR.R
 ├── XGBoost_ISSA.py
 └── data/
-    ├── geno_for_R.csv.gz   # genotype matrix (gzip-compressed, 47 MB)
-    └── y.csv               # phenotype table with header
+    ├── geno_for_R.csv.gz.01 ... .07   # gzip genotype matrix, split into 7 parts (~47 MB total)
+    └── y.csv                          # phenotype table with header
 ```
 
 ## Scripts
@@ -35,15 +35,26 @@ accuracy can be reported as a mean over seeds.
 
 ## Data
 
-* **`data/geno_for_R.csv.gz`** — genotype/marker matrix, individuals in rows and SNPs in columns,
-  no header, additive dosage coding (values between 0 and 1). Uncompressed size is about 177 MB;
-  the compressed file is about 47 MB. Decompress it before running the scripts:
+* **`data/geno_for_R.csv.gz.01` … `.07`** — genotype/marker matrix, individuals in rows and SNPs in
+  columns, no header, additive dosage coding (values between 0 and 1). The uncompressed matrix is
+  about 177 MB; the gzip archive is about 47 MB and is **split into 7 parts** to fit the repository
+  upload limit. Reassemble the parts, then decompress:
+
+  Linux / macOS:
 
   ```bash
-  gzip -d data/geno_for_R.csv.gz          # produces data/geno_for_R.csv
+  cat data/geno_for_R.csv.gz.0* > geno_for_R.csv.gz
+  gzip -d geno_for_R.csv.gz          # produces geno_for_R.csv
   ```
 
-  (Windows without `gzip`: right-click the file and extract, or use 7-Zip.)
+  Windows (Command Prompt):
+
+  ```cmd
+  copy /b data\geno_for_R.csv.gz.01+data\geno_for_R.csv.gz.02+data\geno_for_R.csv.gz.03+data\geno_for_R.csv.gz.04+data\geno_for_R.csv.gz.05+data\geno_for_R.csv.gz.06+data\geno_for_R.csv.gz.07 geno_for_R.csv.gz
+  ```
+
+  Then extract `geno_for_R.csv.gz` with 7-Zip (or `gzip -d` if Git Bash is available). The resulting
+  `geno_for_R.csv` is the file read by every script.
 
 * **`data/y.csv`** — phenotype table with a header row. The identifier columns are
   `Cultivar, Panel, Mother, Father`, followed by the measured traits
